@@ -1,17 +1,18 @@
-from django.db import models
 from django.contrib.auth.models import User
-from django.contrib import admin
-# Create your models here.
-class Message(models.Model):
-    body = models.TextField()
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='person_who_sends')
-    date = models.DateTimeField()
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
-    secret_key = models.BinaryField()
-    public_key = models.BinaryField()
-    def __string__(self): 
-        return self.title
+from django.db import models
 
-@admin.register(Message)
-class AuthorAdmin(admin.ModelAdmin):
-    pass
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver')
+    message = models.CharField(max_length=1200)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.message
+
+    class Meta:
+        ordering = ('timestamp',)
+
+
